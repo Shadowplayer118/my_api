@@ -7,7 +7,10 @@ router.get("/", (req, res) => {
   const db = req.app.get("db");
   const sql = "SELECT * FROM inventory WHERE is_deleted = 0";
   db.query(sql, (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+  console.error("SQL Error:", err); // shows in Render logs
+  return res.status(500).json({ error: err.message });
+}
     res.json(results);
   });
 });
@@ -18,7 +21,10 @@ router.get("/:id", (req, res) => {
   const { id } = req.params;
   const sql = "SELECT * FROM inventory WHERE inventory_id = ?";
   db.query(sql, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+  if (err) {
+  console.error("SQL Error:", err); // shows in Render logs
+  return res.status(500).json({ error: err.message });
+}
     res.json(results[0]);
   });
 });
@@ -54,7 +60,10 @@ router.post("/", (req, res) => {
   ];
 
   db.query(sql, values, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+  console.error("SQL Error:", err); // shows in Render logs
+  return res.status(500).json({ error: err.message });
+}
     res.json({ message: "Item added successfully!", id: result.insertId });
   });
 });
